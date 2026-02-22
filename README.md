@@ -1,142 +1,258 @@
-# 🎮 Сто к Одному (100 to 1)
+# 🎮 Сто к Одному
 
-Multiplayer real-time game for parties, corporate events, and fun.
+Многопользовательская игра в реальном времени для вечеринок и корпоративов!
 
-## 📋 Features
+---
 
-- **Real-time multiplayer** - Synchronized gameplay with WebSocket
-- **Three roles** - Board (TV), Admin (tablet), Buzzer (phone)
-- **Multiple game modes** - Simple, Double, Triple, Reverse, Big Game
-- **Modern UI** - Responsive design with animations
-- **Sound effects** - Audio feedback for game events
-- **QR sharing** - Quick room connection
-- **Undo functionality** - Cancel recent actions
-- **Accessibility** - Keyboard shortcuts and screen reader support
+## ✨ О чем это?
 
-## 🚀 Quick Start
+"Сто к Одному" - это классическая развивающая игра, где команды должны угадать самые популярные ответы на вопросы опроса. Первая команда даёт ответы, если не угадает - ходит вторая!
+
+**Идеально подходит для:**
+- 🎉 Корпоративов
+- 🎂 Дней рождения
+- 📚 Обучений и тренингов
+- 👨‍👩‍👧 Семейных вечеров
+
+---
+
+## 🚀 Быстрый старт
 
 ```bash
-# Install dependencies
+# Установить зависимости
 npm install
 
-# Start server
+# Запустить сервер
 cd server && npm run dev
 
-# Start client (new terminal)
+# Запустить клиент в новом терминале
 cd client && npm run dev
 
-# Open http://localhost:3000
+# Открыть http://localhost:3000
 ```
 
-## 📦 Project Structure
+---
+
+## 🎯 Как играть?
+
+### 3 роли для 3 устройств:
+
+1. **Табло** - на телевизоре или проекторе
+   - Отображает вопросы и ответы
+   
+2. **Ведущий** - на планшете/ноутбуке
+   - Управляет игрой, открывает ответы, начисляет очки
+   
+3. **Кнопка игрока** - на телефонах
+   - Игроки нажимают, когда готовы ответить
+
+### Пример игры:
 
 ```
-├── client/              # React frontend
-│   ├── src/
-│   │   ├── components/ # React components
-│   │   ├── services/   # API & Socket services
-│   │   └── utils/      # Utility functions
-│   └── e2e/           # Playwright tests
-│
-├── server/             # Node.js backend
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── services/
-│   │   ├── middlewares/
-│   │   ├── validators/
-│   │   └── utils/
-│   └── tests/         # Jest tests
-│
-└── game-packs/        # Game question packs
+Вопрос: "Самый популярный фрукт?"
+
+Команда 1: "Яблоко!" ✅ (30 очков)
+Команда 1: "Апельсин!" ✅ (15 очков)
+Команда 1: "Груша!" ❌ Промах (X)
+Команда 1: "Банан!" ❌ Промах (XX)
+Команда 1: "Слива!" ❌ Промах (XXX) → Ход команде 2!
+
+Команда 2: "Мандарин!" ❌ Промах (X)
+Команда 2: "Яблоко!" ✅ Остался в игре (продолжают)
+
+Всего в банке: 45 очков → Команда 1
 ```
 
-## 🎯 How to Play
+---
 
-1. **Create game** - Select question pack
-2. **Open Board** - Display on TV/projector
-3. **Open Admin** - Control game from tablet
-4. **Players connect** - Use QR code or room code
-5. **Press Buzzer** - First to press answers
-6. **Reveal answers** - Admin reveals correct ones
-7. **Score points** - Team scoring system
+## 🎬 Режимы игры
 
-## 🔧 Technical Stack
+| Режим | Множитель | Вопросов |
+|-------|-----------|----------|
+| **Простой** | x1 | 6 |
+| **Двойной** | x2 | 6 |
+| **Тройной** | x3 | 6 |
+| **И наоборот** | x1 | 6 |
+| **Большая игра** | финал | 5 |
 
-### Frontend
-- React 18
-- Vite
-- Socket.io-client
-- Howler.js
-- NoSleep.js
-- React Router
-- Playwright (E2E tests)
+---
 
-### Backend
-- Node.js
-- Express
-- Socket.io
-- Winston (logging)
-- Joi (validation)
-- Jest (unit tests)
-
-## 📊 Game Modes
-
-| Mode | Multiplier | Questions |
-|------|-----------|-----------|
-| Simple | x1 | 6 |
-| Double | x2 | 6 |
-| Triple | x3 | 6 |
-| Reverse | x1 | 6 |
-| Big Game | x1 | 5 |
-
-## 🧪 Testing
+## 🧪 Тесты
 
 ```bash
-# Server tests
+# Тесты сервера
 cd server && npm test
 
-# Client lint
+# Проверка клиента
 cd client && npm run lint
 
-# E2E tests (requires installation)
+# E2E тесты (требуется Playwright)
 cd client
 npm install -D @playwright/test
 npx playwright install
 npm run test:e2e
 ```
 
-Test Coverage: **71.59%** (173 tests)
+**Покрытие тестами:** 71.59% (173 теста)
+
+---
 
 ## 🐳 Docker
 
 ```bash
-# Build and run
+# Собрать и запустить
 docker-compose up -d
 
-# Stop and remove
+# Остановить
 docker-compose down
 ```
 
-## 📖 Deployment
+---
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for production deployment.
+## 📖 Технический стек
 
-## 🤝 Contributing
+### Frontend
+- ⚛️ React 18
+- ⚡ Vite
+- 📡 Socket.io-client
+- 🔊 Howler.js (звук)
+- 📱 NoSleep.js (блокировка спящего режима)
 
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing`)
-5. Open Pull Request
-
-## 📄 License
-
-MIT
-
-## 🙏 Credits
-
-Game inspired by "Family Feud" format.
+### Backend
+- 💻 Node.js
+- 🚀 Express
+- 📡 Socket.io
+- 📝 Winston (логирование)
+- ✔️ Joi (валидация)
 
 ---
 
-**Need help?** Check the documentation in `/docs` folder or open an issue.
+## 🎨 Фичи
+
+✅ **3 роли** - для разных устройств  
+✅ **Реальное время** - синхронизация < 100 ms  
+✅ **5 режимов игры** - от простого до финала  
+✅ **QR коды** - мгновенное подключение  
+✅ **Звуки** - эффекты для каждого действия  
+✅ **Отмена действий** - можно вернуть последние 5 ходов  
+✅ **Горячие клавиши** - управление ведущего  
+✅ **Подсказки** - встроенная справка  
+✅ **Адаптивный дизайн** - работает везде  
+✅ **Авто-подключение** - при обрыве связи  
+
+---
+
+## 🏆 Основные возможности
+
+### Для ведущего:
+- Выбор раунда
+- Открытие ответов
+- Добавление промахов
+- Переключение команды
+- Начисление очков
+- Сброс кнопки
+
+### Для игроков:
+- Вибрация при победе (на мобильных)
+- Отображение статуса
+- Простое нажатие кнопки
+
+### Для всех:
+- Синхронизация состояния
+- Система нотификаций
+- Статус соединения
+- История действий
+
+---
+
+## 📦 Структура проекта
+
+```
+├── client/              # Frontend (React)
+│   ├── src/
+│   │   ├── components/ # React компоненты
+│   │   ├── services/   # API & WebSocket
+│   │   └── utils/      # Утилиты
+│   └── e2e/           # E2E тесты
+│
+├── server/             # Backend (Node.js)
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── services/
+│   │   ├── middlewares/
+│   │   └── validators/
+│   └── tests/         # Unit тесты
+│
+└── game-packs/        # Пакеты вопросов
+```
+
+---
+
+## 🔧 Демо вопросы
+
+**Простой раунд:**
+> "Самый популярный фрукт?"
+> 
+> 🔹 Apple - 30
+> 🔹 Banana - 25
+> 🔹 Orange - 15
+> 🔹 Pear - 10
+> 🔹 Grapes - 12
+> 🔹 Strawberry - 8
+
+**Двойной раунд (очки x2):**
+> "Что покупают в супермаркете?"
+> 
+> 🔹 Bread - 35×2 = 70
+> 🔹 Milk - 28×2 = 56
+> 🔹 Eggs - 22×2 = 44
+> ...
+
+---
+
+## 🚀 Деплой
+
+Подробные инструкции в [DEPLOYMENT.md](DEPLOYMENT.md)
+
+**Коротко:**
+```bash
+# На сервере 2GB RAM (₽119/мес)
+npm install
+cd client && npm run build && cd ..
+cd server
+pm2 start npm --name "100to1" -- run dev
+```
+
+---
+
+## 🤝 Участие
+
+Всегда рады вашим PR! 
+
+1. Fork
+2. Create branch (`git checkout -b feature/amazing`)
+3. Commit (`git commit -m 'Add amazing feature'`)
+4. Push (`git push origin feature/amazing`)
+5. Open PR
+
+---
+
+## 📄 Лицензия
+
+MIT
+
+---
+
+**Хотите поиграть?** Создайте игру и зовите друзей! 
+
+**🎉 Удачи!**
+
+---
+
+## 📞 Нужна помощь?
+
+- 📖 [Документация](docs/)
+- 🐛 [Баги](new?template=bug_report.md)
+- 💡 [Идеи](new?template=feature_request.md)
+
+Made with ❤️ by KeelBismark
