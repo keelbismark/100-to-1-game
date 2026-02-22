@@ -1,212 +1,142 @@
-# Сто к Одному - Веб-игра
+# 🎮 Сто к Одному (100 to 1)
 
-SPA-приложение для проведения игры "100 к 1" в компании с поддержкой нескольких устройств.
+Multiplayer real-time game for parties, corporate events, and fun.
 
-## Технологии
+## 📋 Features
+
+- **Real-time multiplayer** - Synchronized gameplay with WebSocket
+- **Three roles** - Board (TV), Admin (tablet), Buzzer (phone)
+- **Multiple game modes** - Simple, Double, Triple, Reverse, Big Game
+- **Modern UI** - Responsive design with animations
+- **Sound effects** - Audio feedback for game events
+- **QR sharing** - Quick room connection
+- **Undo functionality** - Cancel recent actions
+- **Accessibility** - Keyboard shortcuts and screen reader support
+
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start server
+cd server && npm run dev
+
+# Start client (new terminal)
+cd client && npm run dev
+
+# Open http://localhost:3000
+```
+
+## 📦 Project Structure
+
+```
+├── client/              # React frontend
+│   ├── src/
+│   │   ├── components/ # React components
+│   │   ├── services/   # API & Socket services
+│   │   └── utils/      # Utility functions
+│   └── e2e/           # Playwright tests
+│
+├── server/             # Node.js backend
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── services/
+│   │   ├── middlewares/
+│   │   ├── validators/
+│   │   └── utils/
+│   └── tests/         # Jest tests
+│
+└── game-packs/        # Game question packs
+```
+
+## 🎯 How to Play
+
+1. **Create game** - Select question pack
+2. **Open Board** - Display on TV/projector
+3. **Open Admin** - Control game from tablet
+4. **Players connect** - Use QR code or room code
+5. **Press Buzzer** - First to press answers
+6. **Reveal answers** - Admin reveals correct ones
+7. **Score points** - Team scoring system
+
+## 🔧 Technical Stack
 
 ### Frontend
 - React 18
-- React Router
+- Vite
 - Socket.io-client
-- Howler.js (для звуков)
-- NoSleep.js (предотвращение засыпания экрана)
-- Vite (сборщик)
+- Howler.js
+- NoSleep.js
+- React Router
+- Playwright (E2E tests)
 
 ### Backend
 - Node.js
 - Express
 - Socket.io
-- CORS
+- Winston (logging)
+- Joi (validation)
+- Jest (unit tests)
 
-## Установка и запуск
+## 📊 Game Modes
 
-### 1. Установка зависимостей сервера
+| Mode | Multiplier | Questions |
+|------|-----------|-----------|
+| Simple | x1 | 6 |
+| Double | x2 | 6 |
+| Triple | x3 | 6 |
+| Reverse | x1 | 6 |
+| Big Game | x1 | 5 |
+
+## 🧪 Testing
 
 ```bash
-cd server
-npm install
-```
+# Server tests
+cd server && npm test
 
-### 2. Установка зависимостей клиента
+# Client lint
+cd client && npm run lint
 
-```bash
+# E2E tests (requires installation)
 cd client
-npm install
+npm install -D @playwright/test
+npx playwright install
+npm run test:e2e
 ```
 
-### 3. Запуск сервера
+Test Coverage: **71.59%** (173 tests)
+
+## 🐳 Docker
 
 ```bash
-cd server
-npm start
+# Build and run
+docker-compose up -d
+
+# Stop and remove
+docker-compose down
 ```
 
-Или в режиме разработки:
-```bash
-npm run dev
-```
+## 📖 Deployment
 
-Сервер запустится на порту 5000.
+See [DEPLOYMENT.md](DEPLOYMENT.md) for production deployment.
 
-### 4. Запуск клиента
+## 🤝 Contributing
 
-```bash
-cd client
-npm run dev
-```
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing`)
+5. Open Pull Request
 
-Клиент запустится на порту 3000.
+## 📄 License
 
-## Как играть
+MIT
 
-### Создание игры
+## 🙏 Credits
 
-1. Откройте `http://localhost:3000`
-2. Нажмите "Создать игру"
-3. Выберите пакет вопросов
-4. Откроется панель ведущего и автоматически откроется новое окно с табло
+Game inspired by "Family Feud" format.
 
-### Подключение устройств
+---
 
-Для подключения дополнительных устройств:
-
-1. **Табло**: Откройте `http://localhost:3000/game/{room_id}/board` на телевизоре или большом экране
-2. **Ведущий**: Откройте `http://localhost:3000/game/{room_id}/admin` на планшете или ноутбуке
-3. **Кнопка игрока**: Откройте `http://localhost:3000/game/{room_id}/buzzer` на смартфонах игроков
-
-### Игровой процесс
-
-1. Ведущий выбирает раунд (Простой, Двойной, Тройной или Игра наоборот)
-2. На табло появляется вопрос с закрытыми ответами
-3. Игроки нажимают свои кнопки (или ведущий назначает отвечающего)
-4. Ведущий открывает ответы, нажимая соответствующие кнопки
-5. При неправильном ответе ведущий нажимает "Промах"
-6. После 3 промахов ход переходит к другой команде
-7. Ведущий может начислить очки активной команде
-
-### Режимы игры
-
-- **Простой раунд**: Классическая игра, очки как указано
-- **Двойной раунд**: Очки удваиваются
-- **Тройной раунд**: Очки утраиваются
-- **Игра наоборот**: Самый популярный ответ меньше всего очков
-- **Большая игра**: Финал с 5 вопросами
-
-## Проектная структура
-
-```
-.
-├── server/                    # Backend сервер
-│   ├── src/
-│   │   ├── server.js         # Основной файл сервера с Socket.io
-│   │   ├── controllers       # Контроллеры API
-│   │   ├── models           # Модели данных
-│   │   ├── routes           # HTTP маршруты
-│   │   ├── services         # Бизнес-логика
-│   │   └── utils            # Вспомогательные функции
-│   └── package.json
-├── client/                   # Frontend клиент
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Board/       # Компонент табло
-│   │   │   ├── Admin/       # Компонент ведущего
-│   │   │   └── Buzzer/      # Компонент кнопки игрока
-│   │   ├── services/        # WebSocket сервисы
-│   │   ├── utils/           # Вспомогательные функции
-│   │   ├── App.jsx          # Основной компонент
-│   │   └── main.jsx         # Точка входа
-│   ├── public/              # Статические файлы
-│   └── package.json
-├── game-packs/              # Пакеты вопросов в формате JSON
-│   └── pack1.json          # Пример пакета
-└── README.md
-```
-
-## Socket.io события
-
-### Клиент → Сервер
-
-- `create_room` - Создание новой комнаты
-- `join_room` - Присоединение к комнате
-- `set_team` - Выбор команды (для кнопки)
-- `reveal_answer` - Открытие ответа
-- `add_mistake` - Добавление промаха
-- `switch_team` - Переключение активной команды
-- `award_points` - Начисление очков
-- `load_round` - Загрузка раунда
-- `buzzer_press` - Нажатие кнопки
-- `reset_buzzer` - Сброс кнопки
-- `toggle_sound` - Включение/выключение звука
-
-### Сервер → Клиент
-
-- `room_created` - Комната создана
-- `joined_room` - Успешное присоединение
-- `room_updated` - Обновление состояния комнаты
-- `answer_revealed` - Ответ открыт
-- `mistake_added` - Промах добавлен
-- `team_switched` - Команда переключена
-- `points_awarded` - Очки начислены
-- `round_loaded` - Раунд загружен
-- `buzzer_pressed` - Кнопка нажата
-- `buzzer_reset` - Кнопка сброшена
-- `sound_toggled` - Звук переключен
-- `error` - Ошибка
-
-## Формат игрового пакета
-
-```json
-{
-  "pack_id": "unique_id",
-  "title": "Название пакета",
-  "description": "Описание",
-  "rounds": {
-    "simple": {
-      "question": "Вопрос?",
-      "answers": [
-        {"text": "Ответ 1", "score": 30},
-        {"text": "Ответ 2", "score": 25}
-      ]
-    },
-    "double": { ... },
-    "triple": { ... },
-    "reverse": { ... },
-    "big_game": [
-      {
-        "question": "Вопрос?",
-        "answers": [
-          {"text": "Ответ", "score": 25, "synonyms": ["Синоним"]}
-        ]
-      }
-    ]
-  }
-}
-```
-
-## Особенности
-
-- **Реальное время**: Все обновления происходят мгновенно через WebSocket
-- **Звуковые эффекты**: Встроенные звуки с возможностью отключения
-- **Адаптивный дизайн**: Поддержка различных разрешений экранов
-- **Предотвращение засыпания**: Экран не гаснет на мобильных устройствах
-- **Синхронизация состояния**: При переподключении восстанавливается текущее состояние игры
-
-## Разработка
-
-### Добавление новых пакетов вопросов
-
-1. Создайте новый JSON файл в папке `game-packs/`
-2. Следуйте формату, указанному в `pack1.json`
-3. Добавьте опцию в выпадающий список на главной странице (`client/src/App.jsx`)
-
-### Добавление новых звуков
-
-Поместите звуковые файлы в форматах MP3 в папку `client/public/sounds/`:
-- `reveal.mp3` - Звук открытия ответа
-- `mistake.mp3` - Звук промаха
-- `wrong.mp3` - Звук ошибки (3 промаха)
-- `winner.mp3` - Звук победителя
-
-## Лицензия
-
-ISC
+**Need help?** Check the documentation in `/docs` folder or open an issue.
