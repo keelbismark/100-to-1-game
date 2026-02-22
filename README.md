@@ -214,9 +214,13 @@ docker-compose down
 
 Подробные инструкции в [DEPLOYMENT.md](DEPLOYMENT.md)
 
+**Минимальные требования для сервера:**
+- CPU: 1 vCPU
+- RAM: 2 GB (до 30 игроков)
+- Network: 100+ Mbit/s
+
 **Коротко:**
 ```bash
-# На сервере 2GB RAM (₽119/мес)
 npm install
 cd client && npm run build && cd ..
 cd server
