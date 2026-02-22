@@ -20,7 +20,13 @@ class SocketService {
     return delay + Math.random() * 1000
   }
 
-  async connect(url = 'http://144.31.167.40:5000', options = {}) {
+  async connect(url, options = {}) {
+    // Auto-detect server URL based on window.location
+    const detectedUrl = url || `${window.location.origin.replace(/\d+$/, '')}/socket.io`;
+    
+    if (this.socket?.connected) {
+      return this.socket
+    }
     if (this.socket?.connected) {
       return this.socket
     }
