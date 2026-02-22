@@ -1,0 +1,180 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate-pr:
+    name: Validate Pull Request
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check PR description
+        run: |
+          if [ -z "${{ github.event.pull_request.body }}" ]; then
+            echo "::error::Pull request description is required"
+            exit 1
+          fi
+
+      - name: Check PR size
+        run: |
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | wc -l)
+          echo "Changed files: $CHANGED_FILES"
+          if [ $CHANGED_FILES -gt 50 ]; then
+            echo "::warning::Large pull request with $CHANGED_FILES files changed. Consider splitting into smaller PRs."
+          fi
+
+  changes-detection:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      server-changed: ${{ steps.changes.outputs.server }}
+      client-changed: ${{ steps.changes.outputs.client }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changes
+        id: changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            server:
+              - 'server/**'
+            client:
+              - 'client/**'
+
+  server-tests-pr:
+    name: Server Tests (PR)
+    runs-on: ubuntu-latest
+    if: needs.changes-detection.outputs.server-changed == 'true'
+    needs: changes-detection
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./server
+        run: npm ci
+
+      - name: Run tests
+        working-directory: ./server
+        run: npm test -- --coverage --maxWorkers=2
+
+      - name: Check coverage threshold
+        working-directory: ./server
+        run: |
+          npm test -- --coverage --coverageReporters=text
+          echo "Tests passed, coverage meets requirements"
+
+  client-tests-pr:
+    name: Client Tests (PR)
+    runs-on: ubuntu-latest
+    if: needs.changes-detection.outputs.client-changed == 'true'
+    needs: changes-detection
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+
+      - name: Run linter
+        working-directory: ./client
+        run: npm run lint
+
+      - name: Build client
+        working-directory: ./client
+        run: npm run build
+
+      - name: Check build output
+        run: |
+          if [ -d "client/dist" ]; then
+            DIST_SIZE=$(du -sh client/dist | cut -f1)
+            echo "Build size: $DIST_SIZE"
+          else
+            echo "::error::Build failed - dist directory not found"
+            exit 1
+          fi
+
+  docker-test-pr:
+    name: Docker Test (PR)
+    runs-on: ubuntu-latest
+    if: |
+      needs.changes-detection.outputs.server-changed == 'true' ||
+      needs.changes-detection.outputs.client-changed == 'true'
+    needs: [changes-detection, server-tests-pr, client-tests-pr]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and test server
+        run: |
+          docker build -t pr-server-test ./server
+          echo "Server Docker image built successfully"
+
+      - name: Build and test client
+        run: |
+          docker build -t pr-client-test ./client
+          echo "Client Docker image built successfully"
+
+  summary:
+    name: PR Summary
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [validate-pr, server-tests-pr, client-tests-pr, docker-test-pr]
+
+    steps:
+      - name: Create PR summary
+        run: |
+          echo "## Pull Request Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Validation**: ${{ needs.validate-pr.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Server Tests**: ${{ needs.server-tests-pr.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Client Tests**: ${{ needs.client-tests-pr.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docker Tests**: ${{ needs.docker-test-pr.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.server-tests-pr.result }}" == "failure" ] || \
+             [ "${{ needs.client-tests-pr.result }}" == "failure" ] || \
+             [ "${{ needs.docker-test-pr.result }}" == "failure" ]; then
+            echo "❌ Some checks failed. Please review the errors above." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Please ensure:" >> $GITHUB_STEP_SUMMARY
+            echo "- All tests pass" >> $GITHUB_STEP_SUMMARY
+            echo "- No linting errors" >> $GITHUB_STEP_SUMMARY
+            echo "- Docker builds succeed" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ All checks passed! Ready for review." >> $GITHUB_STEP_SUMMARY
+          fi

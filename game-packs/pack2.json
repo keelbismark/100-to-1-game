@@ -1,0 +1,113 @@
+{
+  "pack_id": "pack2",
+  "title": "Корпоративная вечеринка",
+  "description": "Вопросы для веселой вечеринки с коллегами",
+  "rounds": {
+    "simple": {
+      "question": "Что чаще всего берут с собой на работу?",
+      "answers": [
+        {"text": "Чашку", "score": 35},
+        {"text": "Бутерброд", "score": 28},
+        {"text": "Ноутбук", "score": 22},
+        {"text": "Зонт", "score": 15},
+        {"text": "Зарядку", "score": 12},
+        {"text": "Книжку", "score": 8}
+      ]
+    },
+    "double": {
+      "question": "Что раздражает в открытом офисе?",
+      "answers": [
+        {"text": "Шум", "score": 40},
+        {"text": "Коллеги", "score": 25},
+        {"text": "Температуру", "score": 20},
+        {"text": "Отсутствие приватности", "score": 18},
+        {"text": "Запах еды", "score": 15},
+        {"text": "Свет", "score": 12}
+      ]
+    },
+    "triple": {
+      "question": "Причина опоздания на работу?",
+      "answers": [
+        {"text": "Пробки", "score": 45},
+        {"text": "Спал", "score": 30},
+        {"text": "Транспорт сломался", "score": 15},
+        {"text": "Забыл дома что-то", "score": 10},
+        {"text": "Думал что выходной", "score": 8},
+        {"text": "Заболевание", "score": 5}
+      ]
+    },
+    "reverse": {
+      "question": "Что дарят коллегам на день рождения?",
+      "answers": [
+        {"text": "Кекс", "score": 15},
+        {"text": "Цветы", "score": 18},
+        {"text": "Канцелярию", "score": 12},
+        {"text": "Сертификат", "score": 20},
+        {"text": "Чашку", "score": 25},
+        {"text": "Подписанную открытку", "score": 10}
+      ]
+    },
+    "big_game": [
+      {
+        "question": "Должность в офисе?",
+        "answers": [
+          {"text": "Менеджер", "score": 30, "synonyms": ["Начальник", "Руководитель"]},
+          {"text": "Секретарша", "score": 25, "synonyms": ["Секретарь"]},
+          {"text": "Программист", "score": 20, "synonyms": ["Разработчик", "IT-специалист"]},
+          {"text": "Бухгалтер", "score": 15},
+          {"text": "Маркетолог", "score": 12},
+          {"text": "HR", "score": 10, "synonyms": ["Кадровик"]},
+          {"text": "Дизайнер", "score": 8}
+        ]
+      },
+      {
+        "question": "Office equipment?",
+        "answers": [
+          {"text": "Компьютер", "score": 35},
+          {"text": "Принтер", "score": 25},
+          {"text": "Сканер", "score": 20},
+          {"text": "Копир", "score": 15, "synonyms": ["Ксерокс"]},
+          {"text": "Телефон", "score": 12},
+          {"text": "Проектор", "score": 10},
+          {"text": "Кофемашина", "score": 8}
+        ]
+      },
+      {
+        "question": "Office furniture?",
+        "answers": [
+          {"text": "Стол", "score": 30},
+          {"text": "Стул", "score": 25},
+          {"text": "Кресло", "score": 20},
+          {"text": "Шкаф", "score": 12},
+          {"text": "Доска", "score": 10},
+          {"text": "Полки", "score": 8},
+          {"text": "Диван", "score": 6}
+        ]
+      },
+      {
+        "question": "Office supplies?",
+        "answers": [
+          {"text": "Ручка", "score": 35},
+          {"text": "Бумага", "score": 30},
+          {"text": "Карандаш", "score": 20},
+          {"text": "Степлер", "score": 12},
+          {"text": "Ножницы", "score": 10},
+          {"text": "Скрепки", "score": 8},
+          {"text": "Ластик", "score": 6}
+        ]
+      },
+      {
+        "question": "Office snacks?",
+        "answers": [
+          {"text": "Чай", "score": 40},
+          {"text": "Кофе", "score": 35},
+          {"text": "Печенье", "score": 20},
+          {"text": "Шоколад", "score": 15},
+          {"text": "Сухарики", "score": 12},
+          {"text": "Фрукты", "score": 10},
+          {"text": "Соки", "score": 8}
+        ]
+      }
+    ]
+  }
+}

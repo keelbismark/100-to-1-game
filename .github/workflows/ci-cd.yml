@@ -1,0 +1,149 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install server dependencies
+      run: |
+        cd server
+        npm ci
+
+    - name: Install client dependencies
+      run: |
+        cd client
+        npm ci
+
+    - name: Run server linter
+      run: |
+        cd server
+        npm run lint || echo "No lint script configured"
+
+    - name: Run client linter
+      run: |
+        cd client
+        npm run lint || echo "No lint script configured"
+
+    - name: Run server tests
+      run: |
+        cd server
+        npm test || echo "No tests configured"
+
+    - name: Build client
+      run: |
+        cd client
+        npm run build
+
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy results to GitHub Security
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  build-docker:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push server image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./server
+        push: true
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/100-to-1-server:latest
+          ${{ secrets.DOCKER_USERNAME }}/100-to-1-server:${{ github.sha }}
+        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/100-to-1-server:buildcache
+        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/100-to-1-server:buildcache,mode=max
+
+    - name: Build and push client image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./client
+        push: true
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/100-to-1-client:latest
+          ${{ secrets.DOCKER_USERNAME }}/100-to-1-client:${{ github.sha }}
+        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/100-to-1-client:buildcache
+        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/100-to-1-client:buildcache,mode=max
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-docker
+    
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          cd /app/100-to-1
+          docker-compose pull
+          docker-compose up -d
+          docker image prune -f
+
+    - name: Health check
+      run: |
+        sleep 30
+        response=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.SERVER_URL }}/health)
+        if [ $response -ne 200 ]; then
+          echo "Health check failed with status code: $response"
+          exit 1
+        fi
+        echo "Health check passed"

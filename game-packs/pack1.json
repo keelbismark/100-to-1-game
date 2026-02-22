@@ -1,0 +1,108 @@
+{
+  "pack_id": "pack1",
+  "title": "Пакет для Дня Рождения",
+  "description": "Универсальный пакет вопросов для веселого времяпрепровождения",
+  "rounds": {
+    "simple": {
+      "question": "Самый популярный фрукт?",
+      "answers": [
+        {"text": "Яблоко", "score": 30},
+        {"text": "Банан", "score": 25},
+        {"text": "Апельсин", "score": 15},
+        {"text": "Груша", "score": 10},
+        {"text": "Виноград", "score": 12},
+        {"text": "Клубника", "score": 8}
+      ]
+    },
+    "double": {
+      "question": "Что люди покупают в супермаркете?",
+      "answers": [
+        {"text": "Хлеб", "score": 35},
+        {"text": "Молоко", "score": 28},
+        {"text": "Яйца", "score": 22},
+        {"text": "Овощи", "score": 15},
+        {"text": "Мясо", "score": 18},
+        {"text": "Сыр", "score": 12}
+      ]
+    },
+    "triple": {
+      "question": "Причина пропуска работы?",
+      "answers": [
+        {"text": "Болезнь", "score": 40},
+        {"text": "Семейные обстоятельства", "score": 25},
+        {"text": "Транспорт", "score": 15},
+        {"text": "Погода", "score": 10},
+        {"text": "Заработался", "score": 8},
+        {"text": "Просто не захотел", "score": 5}
+      ]
+    },
+    "reverse": {
+      "question": "Что дарят на день рождения?",
+      "answers": [
+        {"text": "Деньги", "score": 15},
+        {"text": "Цветы", "score": 20},
+        {"text": "Книги", "score": 12},
+        {"text": "Одежду", "score": 18},
+        {"text": "Электронику", "score": 25},
+        {"text": "Конфеты", "score": 10}
+      ]
+    },
+    "big_game": [
+      {
+        "question": "Часть тела?",
+        "answers": [
+          {"text": "Рука", "score": 25, "synonyms": ["Ладонь", "Кисть"]},
+          {"text": "Нога", "score": 20},
+          {"text": "Голова", "score": 15},
+          {"text": "Глаз", "score": 12},
+          {"text": "Ухо", "score": 10},
+          {"text": "Нос", "score": 8}
+        ]
+      },
+      {
+        "question": "Цвет?",
+        "answers": [
+          {"text": "Красный", "score": 30},
+          {"text": "Синий", "score": 25},
+          {"text": "Зеленый", "score": 20},
+          {"text": "Желтый", "score": 15},
+          {"text": "Черный", "score": 12},
+          {"text": "Белый", "score": 10}
+        ]
+      },
+      {
+        "question": "Животное?",
+        "answers": [
+          {"text": "Кошка", "score": 35},
+          {"text": "Собака", "score": 30},
+          {"text": "Лошадь", "score": 15},
+          {"text": "Корова", "score": 12},
+          {"text": "Свинья", "score": 10},
+          {"text": "Курица", "score": 8}
+        ]
+      },
+      {
+        "question": "Месяц года?",
+        "answers": [
+          {"text": "Январь", "score": 20},
+          {"text": "Декабрь", "score": 18},
+          {"text": "Июль", "score": 16},
+          {"text": "Август", "score": 14},
+          {"text": "Март", "score": 12},
+          {"text": "Май", "score": 10}
+        ]
+      },
+      {
+        "question": "Страна?",
+        "answers": [
+          {"text": "Россия", "score": 35},
+          {"text": "США", "score": 25},
+          {"text": "Китай", "score": 20},
+          {"text": "Германия", "score": 15},
+          {"text": "Франция", "score": 12},
+          {"text": "Италия", "score": 10}
+        ]
+      }
+    ]
+  }
+}

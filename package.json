@@ -1,0 +1,29 @@
+{
+  "name": "100-to-1-game",
+  "version": "1.0.0",
+  "description": "Веб-приложение для игры 'Сто к Одному' с поддержкой нескольких устройств",
+  "main": "index.js",
+  "scripts": {
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "start:server": "cd server && npm start",
+    "start:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "start": "start.bat",
+    "start:unix": "bash start.sh"
+  },
+  "keywords": [
+    "game",
+    "100-to-1",
+    "family-feud",
+    "websocket",
+    "react",
+    "socket.io"
+  ],
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "server",
+    "client"
+  ]
+}
