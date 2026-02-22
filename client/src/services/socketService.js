@@ -20,7 +20,7 @@ class SocketService {
     return delay + Math.random() * 1000
   }
 
-  async connect(url = 'http://localhost:5000', options = {}) {
+  async connect(url = 'http://144.31.167.40:5000', options = {}) {
     if (this.socket?.connected) {
       return this.socket
     }
